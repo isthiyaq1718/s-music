@@ -1,59 +1,68 @@
-# Waveform (s-music)
+# Smusiic
 
-A single-file, front-end music streaming UI prototype — playlists, search, a full player, and free song playback via YouTube/SoundCloud embeds or direct audio files. No backend required to run it.
+A Spotify-style music streaming web app UI, built from scratch as a personal frontend/UI-UX project. Home feed, search, playlists, a full now-playing screen, favorites, and a persistent mini-player — all in plain HTML, CSS, and JavaScript.
 
-**Live demo:** https://isthiyaq1718.github.io/s-music/
+**Live demo:** https://smusiic.tiiny.site
+
+> Personal/portfolio project. Not affiliated with or endorsed by Spotify or any streaming service — the dark theme + green accent UI is just a familiar, tested layout to design and build against.
 
 ## Features
 
-- **Home / Search / Library / Favorites / Now Playing** screens, with a desktop sidebar and mobile bottom nav
-- **Playlists** — 9 built-in playlists, podcasts, and a live-stream demo
-- **Search** — filters playlists and individual songs live as you type
-- **Playback**
-  - Real seekable audio player (tap or drag the progress bar to jump forward/backward)
-  - YouTube embed playback for songs with a video link
-  - SoundCloud embed playback (visual player) for songs with a track link
-  - Direct audio file playback (mp3/wav/etc., including Firebase Storage links)
-- **Add Song** — paste a YouTube link, SoundCloud link, or direct audio URL to add a new song on the fly
-- **Firebase Storage integration** — optionally auto-loads every song uploaded to a `songs/` folder in your Firebase Storage bucket
-- **Favorites** — heart any playlist to save it
+- **Home** — quick-access playlist grid, "Made for you" and "Recently played" rows, filter chips (All / Music / Podcasts / Live)
+- **Search** — live filtering as you type, plus an "Add Song" modal for pasting a YouTube link, SoundCloud link, or direct audio URL
+- **Playlists & Now Playing** — full-screen player with seek bar, elapsed/duration time, next/prev, and a heart icon to favorite the current playlist
+- **Library & Favorites** — dedicated screens backed by the same playlist data
+- **Playback engine** handles three sources automatically:
+  - Native `<audio>` element for direct file URLs
+  - Embedded YouTube iframe player for YouTube links
+  - Embedded SoundCloud widget for SoundCloud links
+- **Google Sign-In** — real Google Identity Services integration; greeting and avatar update with the signed-in profile
+- **Responsive layout** — sidebar + persistent mini-player on desktop, bottom tab bar + splash screen on mobile
+- **Optional Firebase Storage hookup** — point it at your own bucket to pull in real uploaded audio files automatically (off by default)
 
-## Getting started
+## Tech stack
 
-This is a single static HTML file — no build step, no dependencies to install.
+- Vanilla HTML, CSS, and JavaScript — no framework, no build step
+- [Google Identity Services](https://developers.google.com/identity/gsi/web) for sign-in
+- YouTube IFrame Player API + SoundCloud Widget API for embedded playback
+- Firebase Storage (compat SDK) — optional, for loading self-hosted audio
 
-### Run locally
-Open `index.html` directly, or serve it so embeds/audio work properly:
+## Demo audio note
+
+Fictional song titles (e.g. "Amber Skyline", "Neon Static") play royalty-free sample clips from SoundHelix, deterministically mapped so the same title always plays the same clip — no licensed music files are bundled. A few real songs (Michael Jackson tracks, a couple of Tamil/Hindi film songs) stream via public YouTube/SoundCloud embeds rather than hosted files.
+
+## Running locally
+
+No installation or build step — it's static files.
+
 ```bash
-python3 -m http.server 8000
+git clone https://github.com/<your-username>/smusiic.git
+cd smusiic
+open index.html   # or just double-click the file
 ```
-Then visit `http://localhost:8000`.
 
-### Deploy
-Already live via **GitHub Pages** at the link above. To redeploy after changes:
-1. Push/upload your updated `index.html` to this repo
-2. Go to Settings → Pages → confirm branch is `main`, folder `/ (root)`
-3. Changes go live within a couple of minutes
+## Project structure
 
-## Optional: connect Firebase Storage
+```
+smusiic/
+├── index.html   # markup for all screens (home, search, playlist, now playing, library, favorites)
+├── style.css    # dark theme, layout, responsive rules
+└── script.js    # app state, routing between screens, playback engine, auth
+```
 
-To auto-load your own uploaded songs:
+## Optional: connect your own audio
 
-1. Create a free project at [firebase.google.com](https://firebase.google.com), enable **Storage**
-2. In `index.html`, find the `firebaseConfig` object and replace the placeholder values with your project's config (Project settings → General → Your apps)
-3. Upload audio files under a `songs/` folder in the Storage console
-4. Set Storage rules to allow public read if you want songs to load without login:
-   ```
-   allow read: if true;
-   allow write: if false;
-   ```
-5. Optional: set custom metadata `title` and `artist` on each file — otherwise the filename is used as the title
+To load real uploaded songs instead of relying only on YouTube/SoundCloud links:
 
-## Notes
+1. Create a free project at [firebase.google.com](https://firebase.google.com) and enable Storage
+2. In `script.js`, replace the placeholder `firebaseConfig` values with your project's config (Project settings → General → Your apps)
+3. Upload audio files under a `songs/` folder in the Storage console (optionally set `title`/`artist` custom metadata on each file)
+4. Set Storage rules to allow public read if the page should load without login
 
-- Some songs use third-party SoundCloud/YouTube reuploads for demo purposes — these depend on the original uploader keeping the content live and embeddable, and are not official releases.
-- Playlist track audio uses royalty-free demo clips as stand-ins (no licensed music is bundled).
+## Author
+
+Built by Isthiyaq as a personal project to practice frontend development, UI/UX design, and client-side JavaScript.
 
 ## License
 
-Add your preferred license here (e.g. MIT).
+MIT
